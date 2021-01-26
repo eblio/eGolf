@@ -8,19 +8,21 @@ local sleep = 2000
 local maxSleep = 10000
 local localPlayer = GetLocalPlayer()
 
+gfx:addBlipForPos(resort.pos, resort.blip.s, resort.blip.c, resort.blip.sc, resort.blip.d)
+
 CreateThread(function()
     while true do
 
-        if game:in() then
+        if game:into() then
             sleep = 0
             game:handle()
-        else
-            local d = #(localPlayer:Pos() - golfLocation)
+        elseif not localPlayer:InVeh() then
+            local d = #(localPlayer:Pos() - resort.pos)
 
-            if d < dInt then
+            if d < resort.dist then
                 gfx:helpTextFrame("PLAY_GOLF") -- LABEL : PLAY_GOLF | Press ~INPUT_CONTEXT~ to play Golf.
 
-                if IsControlJustPressed(1, cStart) then
+                if IsControlJustPressed(1, resort.control) then
                     game:start()
                     game:intro()
                 end

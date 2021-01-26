@@ -1,6 +1,12 @@
-golfLocation = vector3(0, 0, 0)
-dInt = 2.5
-cStart = 51
+-- @desc 
+
+-- Start point config
+resort = {
+    pos = vector3(-1366.49, 56.64, 54.09),
+    dist = 2.5,
+    control = 51,
+    blip = { s = 109, c = { 0, 255 }, sc = 1.0, d = 2 }
+}
 
 ballHash = `prop_golf_ball`
 teeHash = `prop_golf_tee`
