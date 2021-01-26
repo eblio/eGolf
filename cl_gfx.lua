@@ -2,33 +2,135 @@
 -- @author Elio
 -- @version 2.0
 
--- This file was written thanks to decompiled scripts and :
+-- This file was written thanks to decompiled scripts and (regarding scaleforms) :
 -- https://www.vespura.com/fivem/scaleform/
 -- https://github.com/DevTestingPizza/FiveMGolf/blob/master/FiveMGolf/Gfx.cs
 
-gfx = {}
+gfx = {} -- *Static class*
 
+-- Scaleforms stuff
 local sHud = nil        -- Hole, wind, scoreboard ...
 local sFloating = nil   -- Ball informations
 local sButtons = nil    -- Instructional buttons
 local sMessage = nil    -- Big message
 local holeBlip = nil    -- Hole blip
 
--- @desc Initialize the graphics
+-- Camera animation stuff
+local holeCam = nil
+local holeDict = 'mini@golfhole_preview'
+local holeToClip = {
+    [0] = "hole_01_cam",
+    [1] = "hole_02_cam",
+    [2] = "hole_03_cam",
+    [3] = "hole_04_cam",
+    [4] = "hole_05_cam",
+    [5] = "hole_06_cam",
+    [6] = "hole_07_cam",
+    [7] = "hole_08_cam",
+    [8] = "hole_09_cam"
+}
+
+local holeToTime = {
+    [0] = 1000,
+    [1] = 1300,
+    [2] = 2500,
+    [3] = 1200,
+    [4] = 2000,
+    [5] = 1800,
+    [6] = 2000,
+    [7] = 1800,
+    [8] = 2100
+}
+
+-- @section Classic stuff
+
+-- @desc Draw help text for a frame
+-- @param label label of the text
+function gfx:helpTextFrame(label)
+    DisplayHelpTextThisFrame(label, 0)
+end
+
+-- @desc Apply options to the specific blip
+-- @param blip blip handle
+-- @param sprite sprite
+-- @param color table = { color, alpha }
+-- @param scale scale
+-- @param display display type
+function gfx:applyBlipOptions(blip, sprite, color, scale, display)
+    SetBlipSprite(blip, sprite)
+    SetBlipColour(blip, color[1])
+    SetBlipAlpha(blip, color[2])
+    SetBlipScale(blip, scale)
+    SetBlipDisplay(blip, display)
+end
+
+-- @desc Add a blip to a specific location
+-- @param pos position
+-- @param sprite sprite
+-- @param color table = { color, alpha }
+-- @param scale scale
+-- @param display display type
+-- @return blip handle
+function gfx:addBlipForPos(pos, sprite, color, scale, display)
+    local blip = AddBlipForCoord(pos)
+    gfx:applyBlipOptions(blip, sprite, color, scale, display)
+    return blip
+end
+
+-- @desc Add a blip to a specific entity
+-- @param ent entity
+-- @param sprite sprite
+-- @param color table = { color, alpha }
+-- @param scale scale
+-- @param display display type
+-- @return blip handle
+function gfx:addBlipForEntity(ent, sprite, color, scale, display)
+    local blip = AddBlipForEntity(ent)
+    gfx:applyBlipOptions(blip, sprite, color, scale, display)
+    return blip
+end
+
+-- @desc Do a screen fade in
+-- @param ms milliseconds
+function gfx:fadeIn(ms, sync)
+    DoScreenFadeIn(ms)
+    if sync then Wait(ms + 100) end
+end
+
+-- @desc Do a screen fade out
+-- @param ms milliseconds
+function gfx:fadeOut(ms, sync)
+    DoScreenFadeOut(ms)
+    if sync then Wait(ms + 100) end
+end
+
+-- @section Golf specific stuff
+
+-- @desc Initialize the scaleforms
 function gfx:init()
+    -- Scaleform stuff
     sHud = Scaleform('GOLF')
     sFloating = Scaleform('GOLF_FLOATING_UI')
     sButtons = Scaleform('INSTRUCTIONAL_BUTTONS')
     sMessage = Scaleform('MIDSIZED_MESSAGE')
+
+    -- Camera stuff
+    holeCam = CreateCamera(964613260, 0)
+    RequestAnimDict(holeDict)
 end
 
 -- @desc Clear everything that was requested
 function gfx:clear()
+    -- Scaleform stuff
     sHud:Destroy()
     sFloating:Destroy()
     sButtons:Destroy()
     sMessage:Destroy()
     gfx:clearMinimap()
+
+    -- Camera stuff
+    DestroyCam(holeCam, false)
+    holeCam = nil
 end
 
 -- @desc Render the global HUD
@@ -166,15 +268,30 @@ function gfx:clearMinimap()
     end
 end
 
-function gfx:enableTrailPath(from, to)
-    GolfTrailSetEnabled(true)
-    GolfTrailSetPath(from, to.x, to.y, 10.5, 1.0, 0.5, false)
+function gfx:playHoleAnim(id)
+    if holeCam ~= nil and HasAnimDictLoaded(holeDict) then
+
+        gfx:fadeOut(250, true)
+        PlayCamAnim(holeCam, holeToClip[id], holeDict, -1317.17, 60.494, 53.56, 0.0, 0.0, 0.0, 0, 2)
+        SetCamActiveWithInterp(holeCam, GetRenderingCam(), holeToTime[id], 1, 1)
+        RenderScriptCams(1, 0, 3000, 1, 0, 0)
+        gfx:fadeIn(250, false)
+
+        Wait(GetAnimDuration(holeDict, holeToClip[id]) * 1000)
+
+        gfx:fadeOut(250, true)
+        SetCamActive(holeCam, false)
+        RenderScriptCams(0, 0, 0, 1, 0, 0)
+        gfx:fadeIn(250, false)
+    end
 end
 
-function gfx:disableTrailPath()
-    GolfTrailSetEnabled(false)
-end
+-- Not working properly yet, math are needed
+-- function gfx:enableTrailPath(from, to)
+--     GolfTrailSetEnabled(true)
+--     GolfTrailSetPath(from, to.x, to.y, 10.5, 1.0, 0.5, false)
+-- end
 
-function gfx:helpTextFrame(label)
-    DisplayHelpTextThisFrame(label, 0)
-end
+-- function gfx:disableTrailPath()
+--     GolfTrailSetEnabled(false)
+-- end

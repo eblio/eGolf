@@ -14,7 +14,7 @@ function game:start()
     inGame = true
 end
 
-function game:end()
+function game:stop()
     inGame = false
 end
 
@@ -22,13 +22,14 @@ function game:intro()
     
 end
 
-function game:in()
+function game:into()
     return inGame
+end
+
+function game:handle()
+
 end
 
 function game:display()
     
 end
-
-
-
