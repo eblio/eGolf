@@ -1,4 +1,4 @@
--- Manage scaleforms efficiently.
+-- @desc Manage scaleforms efficiently.
 -- @author: Elio
 -- @version: 2.0
 

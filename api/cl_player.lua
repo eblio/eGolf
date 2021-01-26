@@ -1,4 +1,4 @@
--- Manage local player efficiently
+-- @desc Manage local player efficiently
 -- @author: Elio
 -- @version: 2.0
 
