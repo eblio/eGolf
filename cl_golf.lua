@@ -25,7 +25,7 @@ local charge = 0
 
 -- Load everything necessary to play golf.
 function golf:runSetup()
-    RequestAdditionalText('SP_GOLF', 3);
+    RequestAdditionalText('SP_GOLF', 3)
     RequestStreamedTextureDict('GolfPutting', false)
     RequestAnimDict('mini@golfai')
     RequestNamedPtfxAsset('scr_minigamegolf')
@@ -63,19 +63,19 @@ end
 
 function golf:disableControls()
     DisableControlAction(0, 142, 1);
-	DisableControlAction(0, 143, 1);
-	DisableControlAction(0, 79, 1);
-	DisableControlAction(0, 287, 1);
-	DisableControlAction(0, 286, 1);
-	DisableControlAction(0, 44, 1);
-	DisableControlAction(0, 37, 1);
-	DisableControlAction(0, 66, 1);
-	DisableControlAction(0, 67, 1);
-	DisableControlAction(0, 68, 1);
-	DisableControlAction(0, 69, 1);
-	DisableControlAction(0, 70, 1);
-	DisableControlAction(0, 99, 1);
-	DisableControlAction(0, 100, 1);
+    DisableControlAction(0, 143, 1);
+    DisableControlAction(0, 79, 1);
+    DisableControlAction(0, 287, 1);
+    DisableControlAction(0, 286, 1);
+    DisableControlAction(0, 44, 1);
+    DisableControlAction(0, 37, 1);
+    DisableControlAction(0, 66, 1);
+    DisableControlAction(0, 67, 1);
+    DisableControlAction(0, 68, 1);
+    DisableControlAction(0, 69, 1);
+    DisableControlAction(0, 70, 1);
+    DisableControlAction(0, 99, 1);
+    DisableControlAction(0, 100, 1);
 end
 
 -- Place the ped according to the ball posisiton.

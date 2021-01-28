@@ -11,15 +11,15 @@ tce = TriggerClientEvent
 -- @param name name of the event
 -- @param func the function attached to the event
 function netEvent(name, func)
-	RegisterNetEvent(name)
-	AddEventHandler(name, func)
+    RegisterNetEvent(name)
+    AddEventHandler(name, func)
 end
 
 -- @desc Handle event
 -- @param name name of the event
 -- @param func the function attached to the event
 function event(name, func)
-	AddEventHandler(name, func)
+    AddEventHandler(name, func)
 end
 
 -- @desc Get an objet real type (float included)

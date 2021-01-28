@@ -11,14 +11,14 @@ local tce = TriggerClientEvent
 local event = AddEventHandler
 
 local function netEvent(name, func)
-	RegisterNetEvent(name)
-	AddEventHandler(name, func)
+    RegisterNetEvent(name)
+    AddEventHandler(name, func)
 end
 
 local function log(name, text)
-	if DEBUG then
-		Citizen.Trace('^1' .. name .. ': ^0' .. text .. '\n')
-	end
+    if DEBUG then
+        Citizen.Trace('^1' .. name .. ': ^0' .. text .. '\n')
+    end
 end
 
 if IS_SERVER then

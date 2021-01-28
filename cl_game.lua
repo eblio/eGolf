@@ -12,14 +12,16 @@ function game:start()
     currentHole = 1
     currentClub = 1
     inGame = true
+    golf:runSetup()
 end
 
 function game:stop()
     inGame = false
+    golf:clearSetup()
 end
 
 function game:intro()
-    
+    -- Nothing to do there, yet ... 
 end
 
 function game:into()
