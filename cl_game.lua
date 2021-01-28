@@ -8,20 +8,24 @@ local currentHole = 0
 local currentClub = 0
 local inGame = false
 
+local currentState = NONE
+
 function game:start()
     currentHole = 1
     currentClub = 1
+    currentState = NONE
     inGame = true
-    golf:runSetup()
+    golf:init()
 end
 
 function game:stop()
     inGame = false
-    golf:clearSetup()
+    golf:clear()
 end
 
 function game:intro()
-    -- Nothing to do there, yet ... 
+    -- Nothing to do there, yet ...
+    -- A cinematic would be nice
 end
 
 function game:into()
@@ -29,9 +33,13 @@ function game:into()
 end
 
 function game:handle()
+    if currentState == NONE then
+        currentState = golf:startHole(currentHole)
+    elseif currentState == SHOOTING then
+        currentState = golf:handleShoot()
+    elseif currentState == VIEWING then
 
-end
+    elseif currentState == TRANSITION then
 
-function game:display()
-    
+    end
 end

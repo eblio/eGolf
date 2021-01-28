@@ -14,8 +14,8 @@ CreateThread(function()
     while true do
 
         if game:into() then
-            sleep = 0
             game:handle()
+            sleep = 0
         elseif not localPlayer:InVeh() then
             local d = #(localPlayer:Pos() - resort.pos)
 
@@ -23,8 +23,8 @@ CreateThread(function()
                 gfx:helpTextFrame("PLAY_GOLF") -- LABEL : PLAY_GOLF | Press ~INPUT_CONTEXT~ to play Golf.
 
                 if IsControlJustPressed(1, resort.control) then
-                    game:start()
                     game:intro()
+                    game:start()
                 end
 
                 sleep = 0
