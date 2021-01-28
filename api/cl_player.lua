@@ -109,7 +109,7 @@ function LocalPlayer:Veh()
 end
     
 function LocalPlayer:BoneIndex(bone)
-    return GetPedBoneIndex(localPlayer:Ped(), bone)
+    return GetPedBoneIndex(self:Ped(), bone)
 end
 
 -- Global creation
