@@ -18,29 +18,6 @@ local holeBlip = nil    -- Hole blip
 -- Camera animation stuff
 local holeCam = nil
 local holeDict = 'mini@golfhole_preview'
-local holeToClip = {
-    [0] = "hole_01_cam",
-    [1] = "hole_02_cam",
-    [2] = "hole_03_cam",
-    [3] = "hole_04_cam",
-    [4] = "hole_05_cam",
-    [5] = "hole_06_cam",
-    [6] = "hole_07_cam",
-    [7] = "hole_08_cam",
-    [8] = "hole_09_cam"
-}
-
-local holeToTime = {
-    [0] = 1000,
-    [1] = 1300,
-    [2] = 2500,
-    [3] = 1200,
-    [4] = 2000,
-    [5] = 1800,
-    [6] = 2000,
-    [7] = 1800,
-    [8] = 2100
-}
 
 -- @section Classic stuff
 
@@ -239,19 +216,20 @@ function gfx:setButtons(buttons)
 end
 
 -- @desc Set the minimap hole
--- @param hole hole informations
-function gfx:setMinimapHole(hole)
-    SetRadarZoom(hole.mapZoom)
-    SetMinimapGolfCourse(hole.id)
-    LockMinimapPosition(hole.mapCenter)
-    LockMinimapAngle(hole.mapAngle)
+-- @param id hole id
+function gfx:setMinimapHole(id)
+    local c = holes[id]
+    SetRadarZoom(c.mapZoom)
+    SetMinimapGolfCourse(id)
+    LockMinimapPosition(c.mapCenter)
+    LockMinimapAngle(c.mapAngle)
     ToggleStealthRadar(false)
 
     if holeBlip ~= nil then
         RemoveBlip(holeBlip)
     end
 
-    holeBlip = AddBlipForCoord(hole.holeCoords)
+    holeBlip = AddBlipForCoord(c.holeCoords)
     SetBlipSprite(holeBlip, 358)
 end
 
@@ -268,22 +246,26 @@ function gfx:clearMinimap()
     end
 end
 
-function gfx:playHoleAnim(id)
-    if holeCam ~= nil and HasAnimDictLoaded(holeDict) then
+function gfx:playHoleAnim(id, during)
+    local c = holes[id].anim
 
-        gfx:fadeOut(250, true)
-        PlayCamAnim(holeCam, holeToClip[id], holeDict, -1317.17, 60.494, 53.56, 0.0, 0.0, 0.0, 0, 2)
-        SetCamActiveWithInterp(holeCam, GetRenderingCam(), holeToTime[id], 1, 1)
-        RenderScriptCams(1, 0, 3000, 1, 0, 0)
-        gfx:fadeIn(250, false)
+    gfx:fadeOut(250, true)
 
-        Wait(GetAnimDuration(holeDict, holeToClip[id]) * 1000)
+    PlayCamAnim(holeCam, c.clip, holeDict, -1317.17, 60.494, 53.56, 0.0, 0.0, 0.0, 0, 2)
+    SetCamActiveWithInterp(holeCam, GetRenderingCam(), c.time, 1, 1)
+    RenderScriptCams(1, 0, 3000, 1, 0, 0)
 
-        gfx:fadeOut(250, true)
-        SetCamActive(holeCam, false)
-        RenderScriptCams(0, 0, 0, 1, 0, 0)
-        gfx:fadeIn(250, false)
-    end
+    gfx:fadeIn(250, false)
+
+    Wait(GetAnimDuration(holeDict, c.clip) * 1000)
+
+    gfx:fadeOut(250, true)
+
+    if during  ~= nil then during() end
+    SetCamActive(holeCam, false)
+    RenderScriptCams(0, 0, 0, 1, 0, 0)
+
+    gfx:fadeIn(250, false)
 end
 
 -- Not working properly yet, math are needed

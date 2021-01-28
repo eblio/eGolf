@@ -8,8 +8,11 @@ resort = {
     blip = { s = 109, c = { 0, 255 }, sc = 1.0, d = 2 }
 }
 
-ballHash = `prop_golf_ball`
-teeHash = `prop_golf_tee`
+-- Game state
+NONE = 0
+SHOOTING = 1
+VIEWING = 2
+TRANSITION = 3 -- Most likely will never be used unless a *roleplay* version is made
 
 holeBlipSprite = 358
 aimBlipSprite = 390
@@ -38,8 +41,6 @@ buttons = {
 
 holes = {
     {
-        id = 1,
-        shots = 0,
         par = 5,
         distance = 531,
         mapZoom = math.ceil(0.81 * 1100),
@@ -47,11 +48,10 @@ holes = {
         mapCenter = vector2(-1222.0, 83.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1114.121, 220.789, 63.78),
-        teeCoords = vector3(-1370.93, 173.98, 57.01)
+        teeCoords = vector3(-1370.93, 173.98, 57.01),
+        anim = { clip = "hole_01_cam", time = 1000 },
     },
     {
-        id = 2,
-        shots = 0,
         par = 4,
         distance = 436,
         mapZoom = math.ceil(0.75 * 1100),
@@ -59,11 +59,10 @@ holes = {
         mapCenter = vector2(-1216.0, 247.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1322.07, 158.77, 56.69),
-        teeCoords = vector3(-1107.26, 157.15, 62.04)
+        teeCoords = vector3(-1107.26, 157.15, 62.04),
+        anim = { clip = "hole_02_cam", time = 1300 },
     },
     {
-        id = 3,
-        shots = 0,
         par = 3,
         distance = 436,
         mapZoom = math.ceil(0.1 * 1100),
@@ -71,11 +70,10 @@ holes = {
         mapCenter = vector2(-1274.5, 65.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1237.419, 112.988, 56.086),
-        teeCoords = vector3(-1312.97, 125.64, 56.39)
+        teeCoords = vector3(-1312.97, 125.64, 56.39),
+        anim = { clip = "hole_03_cam", time = 2500 },
     },
     {
-        id = 4,
-        shots = 0,
         par = 4,
         distance = 436,
         mapZoom = math.ceil(0.55 * 1100),
@@ -83,11 +81,10 @@ holes = {
         mapCenter = vector2(-1197.0, 1.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1096.541, 7.848, 49.63),
-        teeCoords = vector3(-1218.56, 107.48, 57.04)
+        teeCoords = vector3(-1218.56, 107.48, 57.04),
+        anim = { clip = "hole_04_cam", time = 1200 },
     },
     {
-        id = 5,
-        shots = 0,
         par = 4,
         distance = 436,
         mapZoom = math.ceil(0.75 * 1100),
@@ -95,11 +92,10 @@ holes = {
         mapCenter = vector2(-1090.0, -70.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-957.386, -90.412, 39.161),
-        teeCoords = vector3(-1098.15, 69.5, 53.09)
+        teeCoords = vector3(-1098.15, 69.5, 53.09),
+        anim = { clip = "hole_05_cam", time = 2000 },
     },
     {
-        id = 6,
-        shots = 0,
         par = 3,
         distance = 436,
         mapZoom = math.ceil(0.4 * 1100),
@@ -107,11 +103,10 @@ holes = {
         mapCenter = vector2(-1051.0, -55.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1103.516, -115.163, 40.444),
-        teeCoords = vector3(-987.7, -105.42, 39.59)
+        teeCoords = vector3(-987.7, -105.42, 39.59),
+        anim = { clip = "hole_06_cam", time = 1800 },
     },
     {
-        id = 7,
-        shots = 0,
         par = 4,
         distance = 436,
         mapZoom = math.ceil(0.75 * 1100),
@@ -119,11 +114,10 @@ holes = {
         mapCenter = vector2(-1164.0, 40.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1290.632, 2.754, 49.217),
-        teeCoords = vector3(-1117.793, -104.069, 40.8406)
+        teeCoords = vector3(-1117.793, -104.069, 40.8406),
+        anim = { clip = "hole_07_cam", time = 2000 },
     },
     {
-        id = 8,
-        shots = 0,
         par = 5,
         distance = 436,
         mapZoom = math.ceil(0.825 * 1100),
@@ -131,11 +125,10 @@ holes = {
         mapCenter = vector2(-1212.0, -120.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1034.944, -83.144, 42.919),
-        teeCoords = vector3(-1272.63, 38.4, 48.75)
+        teeCoords = vector3(-1272.63, 38.4, 48.75),
+        anim = { clip = "hole_08_cam", time = 1800 },
     },
     {
-        id = 9,
-        shots = 0,
         par = 4,
         distance = 436,
         mapZoom = math.ceil(0.675 * 1100),
@@ -143,20 +136,15 @@ holes = {
         mapCenter = vector2(-1173.0, 117.0),
         spawn = vector3(-1367.2, 176.44, 58.01),
         holeCoords = vector3(-1294.775, 83.51, 53.804),
-        teeCoords = vector3(-1138.381, 0.60467, 47.98225)
+        teeCoords = vector3(-1138.381, 0.60467, 47.98225),
+        anim = { clip = "hole_09_cam", time = 2100 },
     },
-}
-
-anims = {
-    idle = 'idle',
-    swingIntro = 'swing_intro',
-    swingAction = 'swing_action',
 }
 
 clubs = {
     -- Driver
     {
-        prop = `prop_golf_driver`,
+        hash = `prop_golf_driver`,
         label = 'CLUB_1', -- 'collision_hmhne2',
         icon = 1,
         pos = vector3(0.38, -0.79, 0.94),
@@ -167,7 +155,7 @@ clubs = {
     },
     -- Woods
     {
-        prop = `prop_golf_wood_01`,
+        hash = `prop_golf_wood_01`,
         label = 'CLUB_2', -- 'collision_34g1vu',
         icon = 3,
         pos = vector3(0.3, -0.92, 0.99),
@@ -177,7 +165,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_wood_01`,
+        hash = `prop_golf_wood_01`,
         label = 'CLUB_3', -- 'collision_34g1vw',
         icon = 5,
         pos = vector3(0.3, -0.92, 0.99),
@@ -188,7 +176,7 @@ clubs = {
     },
     -- Irons
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_4', -- 'collision_34g1vy',
         icon = 9,
         pos = vector3(0.4, -0.83, 0.94),
@@ -198,7 +186,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_5', -- 'collision_34g1vz',
         icon = 10,
         pos = vector3(0.4, -0.83, 0.94),
@@ -208,7 +196,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_6', -- 'collision_7u9nbd5',
         icon = 11,
         pos = vector3(0.4, -0.83, 0.94),
@@ -218,7 +206,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_7', -- 'collision_94kanvh',
         icon = 12,
         pos = vector3(0.4, -0.83, 0.94),
@@ -228,7 +216,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_8', -- 'collision_94kanvi',
         icon = 13,
         pos = vector3(0.4, -0.83, 0.94),
@@ -238,7 +226,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_9', -- 'collision_94kanvj',
         icon = 14,
         pos = vector3(0.4, -0.83, 0.94),
@@ -248,7 +236,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_iron_01`,
+        hash = `prop_golf_iron_01`,
         label = 'CLUB_10', -- 'collision_94kanvk',
         icon = 15,
         pos = vector3(0.4, -0.83, 0.94),
@@ -259,7 +247,7 @@ clubs = {
     },
     -- Pitchers
     {
-        prop = `prop_golf_pitcher_01`,
+        hash = `prop_golf_pitcher_01`,
         label = 'CLUB_11', -- 'collision_94kanvl',
         icon = 16,
         pos = vector3(0.38, -0.79, 0.94),
@@ -269,7 +257,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_pitcher_01`,
+        hash = `prop_golf_pitcher_01`,
         label = 'CLUB_12', -- 'collision_94kanvn',
         icon = 17,
         pos = vector3(0.38, -0.79, 0.94),
@@ -279,7 +267,7 @@ clubs = {
         }
     },
     {
-        prop = `prop_golf_pitcher_01`,
+        hash = `prop_golf_pitcher_01`,
         label = 'CLUB_13', -- 'collision_94kanvo',
         icon = 18,
         pos = vector3(0.38, -0.79, 0.94),
@@ -290,7 +278,7 @@ clubs = {
     },
     -- Putter
     {
-        prop = `prop_golf_putter_01`,
+        hash = `prop_golf_putter_01`,
         label = 'CLUB_14', -- 'collision_94kanvq',
         icon = 19,
         pos = vector3(0.14, -0.62, 0.99),
@@ -299,6 +287,13 @@ clubs = {
             suffix = '_low',
         }
     },
+}
+
+
+anims = {
+    idle = 'idle',
+    swingIntro = 'swing_intro',
+    swingAction = 'swing_action',
 }
 
 powerTypes = {
