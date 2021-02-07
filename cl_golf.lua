@@ -6,6 +6,7 @@ golf = {} -- *Static class*
 
 local localPlayer = GetLocalPlayer()
 
+
 local ball = nil
 local ballHash = `prop_golf_ball`
 
@@ -15,39 +16,112 @@ local teeHash = `prop_golf_tee`
 local club = nil
 local currentClub = 1
 
+local currentSurface = 'tee'
+
+local dict = 'mini@golfai'
+local ipl = 'GolfFlags'
+
+-- Keep track of the current score
+local currentHole = 0
+local currentHoles = {}
+
 local function createNewObject(handle, hash, pos)
     if DoesEntityExist(handle) then DeleteEntity(handle) end
     return CreateObject(hash, pos, false, false, false) -- This will probably be dispatched to the server later on
 end
 
+function getWind()
+    local wd = GetWindDirection()
+    local mag = Vmag(wd) * GetWindSpeed()
+
+    wd = GetHeadingFromVector_2d(wd.x, wd.y) + GetGameplayCamRelativeHeading() + localPlayer:Heading()
+
+    return wd, math.ceil(mag)
+end
+
 function golf:init()
     gfx:init()
+    RequestAdditionalText('SP_GOLF', 3)
+    -- RequestStreamedTextureDict('GolfPutting', false)
+    RequestAnimDict(dict)
+    -- RequestNamedPtfxAsset('scr_minigamegolf')
+
+    RequestModel(ballHash)
+    RequestModel(teeHash)
+
+    for i = 1, #clubs do
+        RequestModel(clubs[i].hash)
+    end
+
+    RequestIpl(ipl)
+
+    for i = 1, #holes do
+        currentHoles[i] = { shots = 0 }
+    end
 end
 
 
 function golf:clear()
     gfx:clear()
+    ClearAdditionalText(3, 1)
+    -- SetStreamedTextureDictAsNoLongerNeeded('GolfPutting')
+    RemoveAnimDict(dict)
+    -- RemoveNamedPtfxAsset('scr_minigamegolf')
+
+    SetModelAsNoLongerNeeded(ballHash)
+    SetModelAsNoLongerNeeded(teeHash)
+
+    for i = 1, #clubs do
+        SetModelAsNoLongerNeeded(clubs[i].hash)
+    end
+
+    RemoveIpl(ipl)
 end
 
 function golf:startHole(id)
     local c = holes[id]
 
     gfx:playHoleAnim(id, function()
+        -- HUD initialization
         gfx:setMinimapHole(id)
+        gfx:display(15)
+        gfx:setHoleDisplay(id, currentHoles[id].shots)
+        gfx:setButtons(buttons.shooting)
+        gfx:enableSwingPreview(true)
+
+        -- Other initializations
+        currentHole = id
+        currentSurface = 'tee'
         
+        -- Create of the objects
         tee = createNewObject(tee, teeHash, c.teeCoords)
-        ball = createNewObject(ball, ballHash, c.teeCoords)
+        ball = createNewObject(ball, ballHash, c.teeCoords + vector3(0.0, 0.0, 0.05))
         club = createNewObject(club, clubs[currentClub].hash, localPlayer:Pos())
 
+        gfx:addBlipForEntity(ball, ballBlipSprite, { 0, 255 }, 0.8, 2)
+
+        -- Placement of everything
         AttachEntityToEntity(club, localPlayer:Ped(), localPlayer:BoneIndex(28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+        AttachEntityToEntity(localPlayer:Ped(), ball, 20, clubs[currentClub].pos, 0.0, 0.0, 0.0, false, false, false, false, 1, true)
+        TaskPlayAnim(localPlayer:Ped(), dict, clubs[currentClub].idle, 1.0, -1.0, -1, 0, 0.0, false, false, false)
     end)
 
     return SHOOTING
 end
 
 function golf:handleShoot()
+    -- Display the HUD
+    gfx:renderHud()
+    gfx:renderButtons()
+
+    -- Update the informations
+    local windDirection, windForce = getWind()
+    gfx:setSwingDisplay(47, currentSurface, windForce, windDirection, currentClub, currentHoles[currentHole].shots)
+
     -- Display graphics stuff
     -- Handle animations and key press
+
+    return SHOOTING
 end
 
 -- local math = math -- localization
@@ -68,44 +142,6 @@ end
 
 -- local currentState = state.idle
 -- local charge = 0
-
--- -- SETUP FUNCTIONS
-
--- -- Load everything necessary to play golf.
--- function golf:runSetup()
---     RequestAdditionalText('SP_GOLF', 3)
---     RequestStreamedTextureDict('GolfPutting', false)
---     RequestAnimDict('mini@golfai')
---     RequestNamedPtfxAsset('scr_minigamegolf')
-
---     RequestModel(ballHash)
---     RequestModel(teeHash)
---     for i = 1, #clubs do
---         RequestModel(clubs[i].prop)
---     end
-
---     gfx:init()
-
---     RequestIpl('GolfFlags')
--- end
-
--- -- Un-load everything.
--- function golf:clearSetup()
---     ClearAdditionalText(3, 1)
---     SetStreamedTextureDictAsNoLongerNeeded('GolfPutting')
---     RemoveAnimDict('mini@golfai')
---     RemoveNamedPtfxAsset('scr_minigamegolf')
-
---     SetModelAsNoLongerNeeded(ballHash)
---     SetModelAsNoLongerNeeded(teeHash)
---     for i = 1, #clubs do
---         SetModelAsNoLongerNeeded(clubs[i].prop)
---     end
-
---     gfx:clear()
-
---     RemoveIpl('GolfFlags')
--- end
 
 -- -- PED FUNCTIONS
 
@@ -215,13 +251,6 @@ end
 
 -- -- CLUB FUNCTIONS
 
--- -- Delete the club object.
--- function golf:deleteClub()
---     if clubObject ~= nil and DoesEntityExist(clubObject) then
---         DeleteObject(clubObject)
---     end
--- end
-
 -- -- Create the club object.
 -- function golf:createClub()
 --     if clubObject ~= nil and DoesEntityExist(clubObject) then
@@ -254,23 +283,6 @@ end
 
 -- -- BALL'N'TEE FUNCTIONS
 
--- -- Delete the ball.
--- function golf:deleteBall()
---     if ballObject ~= nil and DoesEntityExist(ballObject) then
---         DeleteObject(ballObject)
---     end
--- end
-
--- -- Create the ball and the tee.
--- function golf:createBall()
---     if ballObject ~= nil and DoesEntityExist(ballObject) then
---         DeleteObject(ballObject)
---     end
-
---     local teeObject = CreateObject(teeHash, currentHole.teeCoords, 1, 1, 0)
---     ballObject = CreateObject(ballHash, currentHole.teeCoords + vector3(0.0, 0.0, 0.05), 1, 1, 0)
--- end
-
 -- -- Get the informations of the surface the ball is on.
 -- function golf:ballSurface()
 --     local bm = GetLastMaterialHitByEntity(ballObject)
@@ -285,18 +297,6 @@ end
 --     end
 
 --     return bs
--- end
-
--- -- OTHER INFORMATIONS FUNCTIONS
-
--- -- Get the informations regarding the wind.
--- function golf:windInfo()
---     local wd = GetWindDirection()
---     local mag = Vmag(wd) * GetWindSpeed()
-
---     wd = GetHeadingFromVector_2d(wd.x, wd.y) + GetGameplayCamRelativeHeading() + localPlayer:Heading()
-
---     return wd, math.ceil(mag)
 -- end
 
 -- function golf:powerInfo()
