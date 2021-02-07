@@ -142,158 +142,132 @@ holes = {
 }
 
 clubs = {
-    -- Driver
     {
         hash = `prop_golf_driver`,
-        label = 'CLUB_1', -- 'collision_hmhne2',
+        label = 'CLUB_1',
         icon = 1,
         pos = vector3(0.38, -0.79, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        },
+        idle = 'wood_idle_a',
+        action = 'wood_swing_action',
+        intro = 'wood_swing_intro'
     },
-    -- Woods
     {
         hash = `prop_golf_wood_01`,
-        label = 'CLUB_2', -- 'collision_34g1vu',
+        label = 'CLUB_2',
         icon = 3,
         pos = vector3(0.3, -0.92, 0.99),
-        anim = {
-            prefix = 'wood_',
-            suffix = '_high',
-        }
+        idle = 'wood_idle_a',
+        action = 'wood_swing_action',
+        intro = 'wood_swing_intro'
     },
     {
         hash = `prop_golf_wood_01`,
-        label = 'CLUB_3', -- 'collision_34g1vw',
+        label = 'CLUB_3',
         icon = 5,
         pos = vector3(0.3, -0.92, 0.99),
-        anim = {
-            prefix = 'wood_',
-            suffix = '_high',
-        }
+        idle = 'wood_idle_a',
+        action = 'wood_swing_action',
+        intro = 'wood_swing_intro'
     },
-    -- Irons
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_4', -- 'collision_34g1vy',
+        label = 'CLUB_4',
         icon = 9,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_5', -- 'collision_34g1vz',
+        label = 'CLUB_5',
         icon = 10,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_6', -- 'collision_7u9nbd5',
+        label = 'CLUB_6',
         icon = 11,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_7', -- 'collision_94kanvh',
+        label = 'CLUB_7',
         icon = 12,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_8', -- 'collision_94kanvi',
+        label = 'CLUB_8',
         icon = 13,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_9', -- 'collision_94kanvj',
+        label = 'CLUB_9',
         icon = 14,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
     {
         hash = `prop_golf_iron_01`,
-        label = 'CLUB_10', -- 'collision_94kanvk',
+        label = 'CLUB_10',
         icon = 15,
         pos = vector3(0.4, -0.83, 0.94),
-        anim = {
-            prefix = 'iron_',
-            suffix = '_high',
-        }
+        idle = 'iron_idle_a',
+        action = 'iron_swing_action',
+        intro = 'iron_swing_intro'
     },
-    -- Pitchers
     {
         hash = `prop_golf_pitcher_01`,
-        label = 'CLUB_11', -- 'collision_94kanvl',
+        label = 'CLUB_11',
         icon = 16,
         pos = vector3(0.38, -0.79, 0.94),
-        anim = {
-            prefix = 'wedge_',
-            suffix = '_high',
-        }
+        idle = 'wedge_idle_a',
+        action = 'wedge_swing_action',
+        intro = 'wedge_swing_intro'
     },
     {
         hash = `prop_golf_pitcher_01`,
-        label = 'CLUB_12', -- 'collision_94kanvn',
+        label = 'CLUB_12',
         icon = 17,
         pos = vector3(0.38, -0.79, 0.94),
-        anim = {
-            prefix = 'wedge_',
-            suffix = '_high',
-        }
+        idle = 'wedge_idle_a',
+        action = 'wedge_swing_action',
+        intro = 'wedge_swing_intro'
     },
     {
         hash = `prop_golf_pitcher_01`,
-        label = 'CLUB_13', -- 'collision_94kanvo',
+        label = 'CLUB_13',
         icon = 18,
         pos = vector3(0.38, -0.79, 0.94),
-        anim = {
-            prefix = 'wedge_',
-            suffix = '_high',
-        }
+        idle = 'wedge_idle_a',
+        action = 'wedge_swing_action',
+        intro = 'wedge_swing_intro'
     },
-    -- Putter
     {
         hash = `prop_golf_putter_01`,
-        label = 'CLUB_14', -- 'collision_94kanvq',
+        label = 'CLUB_14',
         icon = 19,
         pos = vector3(0.14, -0.62, 0.99),
-        anim = {
-            prefix = 'putt_',
-            suffix = '_low',
-        }
+        idle = 'putt_idle_a',
+        action = 'putt_action',
+        intro = 'putt_intro'
     },
-}
-
-
-anims = {
-    idle = 'idle',
-    swingIntro = 'swing_intro',
-    swingAction = 'swing_action',
 }
 
 powerTypes = {
