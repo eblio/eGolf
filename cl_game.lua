@@ -42,4 +42,15 @@ function game:handle()
     elseif currentState == TRANSITION then
 
     end
+
+    -- Stuff to run every fram in order to restrict the player
+    -- to a "normal" playing behaviour
+    HudWeaponWheelIgnoreSelection()
 end
+
+RegisterCommand('clear', function()
+    golf:init()
+    golf:clear()
+    ClearPedTasksImmediately(PlayerPedId())
+    FreezeEntityPosition(PlayerPedId(), false)
+end)

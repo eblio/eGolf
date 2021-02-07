@@ -15,5 +15,5 @@ server_scripts {
 }
 
 shared_scripts {
-    'api/sh_*.lua.lua',
+    'api/sh_*.lua',
 }
