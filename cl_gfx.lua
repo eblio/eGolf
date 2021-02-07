@@ -132,6 +132,23 @@ end
 
 -- @desc Set the display of the UI
 -- @param id display identifier
+        -- -1 = all
+        -- 0 = nothing
+        -- 1 = map
+        -- 2 = top right
+        -- 3 = top right + map
+        -- 8 = player list
+        -- 9 = player list + map
+        -- 10 = player list + top right
+        -- 11 = player list + map + top right
+        -- 16 = scoreboard
+        -- 17 = scoreboard + map
+        -- 18 = scoreboard + top right
+        -- 19 = scoreboard + top right + map
+        -- 24 = scoreboard + player list
+        -- 25 = scoreboard + player list + map
+        -- 26 = scoreboard + player list + top right
+        -- 27 = scoreboard + player list + top right + map
 function gfx:display(id)
     sHud:CallFunction('SET_DISPLAY', { id })
 end
@@ -141,25 +158,28 @@ end
 -- @param wind wind informations
 -- @param club club informations
 -- @param hole hole informations
-function gfx:setSwingDisplay(surface, wind, club, hole)    
+function gfx:setSwingDisplay(display, surface, windForce, windDirection, club, shots)
+    local s = surfaces[surface]
+    local c = clubs[club]
     sHud:CallFunction('SET_SWING_DISPLAY', {
-        47,                                               -- Display type (47 = display everything)
-        { surface.label }, surface.icon,                  -- Surface informations
-        { 'GOLF_WIND_PLUS', wind.force }, wind.direction, -- Wind informations
-        { club.label }, club.icon,                        -- Club informations
+        display,                                          -- Display type (47 = display lot of stuff)
+        { s.label }, s.icon,                              -- Surface informations
+        { 'GOLF_WIND_PLUS', windForce }, windDirection,   -- Wind informations
+        { c.label }, c.icon,                              -- Club informations
         { 'collision_9b95m6d' }, false,                   -- Power types (not used atm)
         { 'GOLF_SPIN' }, 0, 0.0,                          -- Ball spin infos (nerver displayed)
-        { 'SHOT_NUM', hole.shots },                       -- Hole number of shots
+        { 'SHOT_NUM', shots },                            -- Hole number of shots : IT IS WRONG ATM
     })
 end
 
 -- @desc Set the informations of the current hole
--- @param hole hole informations
-function gfx:setHoleDisplay(hole)
+-- @param id hole number
+function gfx:setHoleDisplay(id)
+    local c = holes[id]
     sHud:CallFunction('SET_HOLE_DISPLAY', {
-        { 'GOLF_HOLE_NUM', hole.id },       -- Hole number
-        { 'GOLF_PAR_NUM', hole.par },       -- Hole par
-        { 'GOLF_HOLE_DIST', hole.shots },   -- Hole number of shots
+        { 'GOLF_HOLE_NUM', id },            -- Hole number
+        { 'GOLF_PAR_NUM', c.par },          -- Hole par
+        { 'DIST_METER', c.distance },       -- Hole initial distance
     })
 end
 
@@ -225,9 +245,7 @@ function gfx:setMinimapHole(id)
     LockMinimapAngle(c.mapAngle)
     ToggleStealthRadar(false)
 
-    if holeBlip ~= nil then
-        RemoveBlip(holeBlip)
-    end
+    if holeBlip ~= nil then RemoveBlip(holeBlip) end
 
     holeBlip = AddBlipForCoord(c.holeCoords)
     SetBlipSprite(holeBlip, 358)
@@ -257,23 +275,20 @@ function gfx:playHoleAnim(id, during)
 
     gfx:fadeIn(250, false)
 
-    Wait(GetAnimDuration(holeDict, c.clip) * 1000)
+    local currentTime = GetGameTimer()
+    local endTime = currentTime + (GetAnimDuration(holeDict, c.clip) * 1000)
+    
+    while currentTime < endTime do
+        currentTime = GetGameTimer()
+        HideHudAndRadarThisFrame()
+        Wait(0)
+    end
 
     gfx:fadeOut(250, true)
 
-    if during  ~= nil then during() end
     SetCamActive(holeCam, false)
     RenderScriptCams(0, 0, 0, 1, 0, 0)
+    if during  ~= nil then during() end
 
     gfx:fadeIn(250, false)
 end
-
--- Not working properly yet, math are needed
--- function gfx:enableTrailPath(from, to)
---     GolfTrailSetEnabled(true)
---     GolfTrailSetPath(from, to.x, to.y, 10.5, 1.0, 0.5, false)
--- end
-
--- function gfx:disableTrailPath()
---     GolfTrailSetEnabled(false)
--- end
