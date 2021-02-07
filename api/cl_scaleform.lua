@@ -39,6 +39,18 @@ local function ScaleformMovieMethodAddParamLabel(args)
     end
 end
 
+local function rtype(o)
+    local t = type(o)
+
+    if t == 'number' then
+        local s = tostring(o)
+        local float = s:find('%.')
+        if float then t = 'float' else t = 'int' end
+    end
+
+    return t
+end
+
 function Scaleform:New(id)
     local self = setmetatable({}, Scaleform)
 
