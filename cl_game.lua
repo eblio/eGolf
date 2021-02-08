@@ -4,11 +4,21 @@
 
 game = {} -- *Static class*
 
+-- @section Constants that you should not modify
+
+-- Game states
+NONE = 0
+SHOOTING = 1
+VIEWING = 2
+TRANSITION = 3
+
+-- @section Current game variables
 local currentHole = 0
 local currentClub = 0
+local currentState = NONE
 local inGame = false
 
-local currentState = NONE
+-- @section General stuff
 
 function game:start()
     currentHole = 1

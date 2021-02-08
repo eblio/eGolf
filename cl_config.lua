@@ -1,18 +1,15 @@
--- @desc 
+-- @desc Configuration of the fold game
+-- at the moment most of these should not be changed
+-- @author Elio
+-- @version 1.0
 
 -- Start point config
 resort = {
     pos = vector3(-1366.49, 56.64, 54.09),
     dist = 2.5,
-    control = 51,
+    control = 51, -- Linked to the label, don't change it
     blip = { s = 109, c = { 0, 255 }, sc = 1.0, d = 2 }
 }
-
--- Game state
-NONE = 0
-SHOOTING = 1
-VIEWING = 2
-TRANSITION = 3 -- Most likely will never be used unless a *roleplay* version is made
 
 holeBlipSprite = 358
 aimBlipSprite = 390
@@ -23,20 +20,6 @@ state = {
     idle = 'idle',
     charging = 'charging',
     shooting = 'shooting',
-}
-
-buttons = {
-    idle = {
-        -- { button = 200, desc = GetLabelText('GOLF_NEXT_HOLE') },
-        -- { button = 18, desc = GetLabelText('GOLF_CONTINUE') },
-    },
-    shooting = {
-        { id = 24, display = GetControlInstructionalButton(0, 24, true), desc = 'INST_SHOT' },
-        { id = 241, display = GetControlGroupInstructionalButton(2, 24, true), desc = 'INST_CLUB' },
-        { id = 242 },
-        { id = 24, display = GetControlGroupInstructionalButton(2, 5, true), desc = 'INST_AIM' },
-        { id = 175 },
-    }
 }
 
 holes = {
@@ -310,5 +293,24 @@ surfaces = {
         label = 'LIE_UNKNOWN',
         icon = 1,
         sound = 'GOLF_BALL_IMPACT_TREE_SOFT_MASTER'
+    }
+}
+
+-- Controls
+-- You probably don't want to touch to these as the display isn't
+-- automaticly sinced to 
+INPUT_GROUP = 0
+INPUT_CLUB_UP = 241
+INPUT_CLUB_DOWN = 242
+INPUT_AIM_LEFT = 
+INPUT_AIM_RIGHT = 
+
+BUTTONS_DISPLAY = {
+    shooting = {
+        { id = 24, display = GetControlInstructionalButton(0, 24, true), desc = 'INST_SHOT' },
+        { id = 241, display = GetControlGroupInstructionalButton(2, 24, true), desc = 'INST_CLUB' },
+        { id = 242 },
+        { id = 24, display = GetControlGroupInstructionalButton(2, 5, true), desc = 'INST_AIM' },
+        { id = 175 },
     }
 }

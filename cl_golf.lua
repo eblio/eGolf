@@ -4,33 +4,34 @@
 
 golf = {} -- *Static class*
 
+-- @section Constants that you should not modify
+local BALL_HASH = `prop_golf_ball`
+local TEE_HASH = `prop_golf_tee`
+local GOLF_ANIM_DICT = 'mini@golfai'
+local GOLF_IPL = 'GolfFlags'
+
+-- @section Player
 local localPlayer = GetLocalPlayer()
 
-
+-- @section Objects handles
 local ball = nil
-local ballHash = `prop_golf_ball`
-
 local tee = nil
-local teeHash = `prop_golf_tee`
-
 local club = nil
+
+-- @section Current game
 local currentClub = 1
-
 local currentSurface = 'tee'
-
-local dict = 'mini@golfai'
-local ipl = 'GolfFlags'
-
--- Keep track of the current score
 local currentHole = 0
 local currentHoles = {}
+
+-- @section Local functions to factor code (mostly)
 
 local function createNewObject(handle, hash, pos)
     if DoesEntityExist(handle) then DeleteEntity(handle) end
     return CreateObject(hash, pos, false, false, false) -- This will probably be dispatched to the server later on
 end
 
-function getWind()
+local function getWind()
     local wd = GetWindDirection()
     local mag = Vmag(wd) * GetWindSpeed()
 
@@ -39,21 +40,23 @@ function getWind()
     return wd, math.ceil(mag)
 end
 
+-- @section General stuff
+
 function golf:init()
     gfx:init()
     RequestAdditionalText('SP_GOLF', 3)
     -- RequestStreamedTextureDict('GolfPutting', false)
-    RequestAnimDict(dict)
+    RequestAnimDict(GOLF_ANIM_DICT)
     -- RequestNamedPtfxAsset('scr_minigamegolf')
 
-    RequestModel(ballHash)
-    RequestModel(teeHash)
+    RequestModel(BALL_HASH)
+    RequestModel(TEE_HASH)
 
     for i = 1, #clubs do
         RequestModel(clubs[i].hash)
     end
 
-    RequestIpl(ipl)
+    RequestIpl(GOLF_IPL)
 
     for i = 1, #holes do
         currentHoles[i] = { shots = 0 }
@@ -65,17 +68,17 @@ function golf:clear()
     gfx:clear()
     ClearAdditionalText(3, 1)
     -- SetStreamedTextureDictAsNoLongerNeeded('GolfPutting')
-    RemoveAnimDict(dict)
+    RemoveAnimDict(GOLF_ANIM_DICT)
     -- RemoveNamedPtfxAsset('scr_minigamegolf')
 
-    SetModelAsNoLongerNeeded(ballHash)
-    SetModelAsNoLongerNeeded(teeHash)
+    SetModelAsNoLongerNeeded(BALL_HASH)
+    SetModelAsNoLongerNeeded(TEE_HASH)
 
     for i = 1, #clubs do
         SetModelAsNoLongerNeeded(clubs[i].hash)
     end
 
-    RemoveIpl(ipl)
+    RemoveIpl(GOLF_IPL)
 end
 
 function golf:startHole(id)
@@ -94,8 +97,8 @@ function golf:startHole(id)
         currentSurface = 'tee'
         
         -- Create of the objects
-        tee = createNewObject(tee, teeHash, c.teeCoords)
-        ball = createNewObject(ball, ballHash, c.teeCoords + vector3(0.0, 0.0, 0.05))
+        tee = createNewObject(tee, TEE_HASH, c.teeCoords)
+        ball = createNewObject(ball, BALL_HASH, c.teeCoords + vector3(0.0, 0.0, 0.05))
         club = createNewObject(club, clubs[currentClub].hash, localPlayer:Pos())
 
         gfx:addBlipForEntity(ball, ballBlipSprite, { 0, 255 }, 0.8, 2)
@@ -103,7 +106,7 @@ function golf:startHole(id)
         -- Placement of everything
         AttachEntityToEntity(club, localPlayer:Ped(), localPlayer:BoneIndex(28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
         AttachEntityToEntity(localPlayer:Ped(), ball, 20, clubs[currentClub].pos, 0.0, 0.0, 0.0, false, false, false, false, 1, true)
-        TaskPlayAnim(localPlayer:Ped(), dict, clubs[currentClub].idle, 1.0, -1.0, -1, 0, 0.0, false, false, false)
+        TaskPlayAnim(localPlayer:Ped(), GOLF_ANIM_DICT, clubs[currentClub].idle, 1.0, -1.0, -1, 0, 0.0, false, false, false)
     end)
 
     return SHOOTING
@@ -118,8 +121,8 @@ function golf:handleShoot()
     local windDirection, windForce = getWind()
     gfx:setSwingDisplay(47, currentSurface, windForce, windDirection, currentClub, currentHoles[currentHole].shots)
 
-    -- Display graphics stuff
     -- Handle animations and key press
+    
 
     return SHOOTING
 end
